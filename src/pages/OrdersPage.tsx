@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getOrders } from "../api/orders";
+import OrderStatusBadge from "../components/OrderStatusBadge";
 import type { Order } from "../types";
 
-// 주문 목록 페이지
 export default function OrdersPage() {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,10 +24,16 @@ export default function OrdersPage() {
   }, []);
 
   const formatPrice = (price: number) =>
-    price.toLocaleString("ko-KR") + "�";
+    price.toLocaleString("ko-KR") + "원";
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString("ko-KR");
+
+  const handleCancelled = (orderId: number) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, status: "취소" as const } : o))
+    );
+  };
 
   if (loading) return <p style={{ padding: "20px" }}>로딩 중...</p>;
 
@@ -34,17 +42,19 @@ export default function OrdersPage() {
       <h1>주문 내역</h1>
 
       {orders.length === 0 ? (
-        <p>주문 내역이 없윽니다.</p>
+        <p>주문 내역이 없습니다.</p>
       ) : (
         <div>
           {orders.map((order) => (
             <div
               key={order.id}
+              onClick={() => navigate(`/orders/${order.id}`)}
               style={{
                 border: "1px solid #ddd",
                 borderRadius: "8px",
                 padding: "16px",
                 marginBottom: "16px",
+                cursor: "pointer",
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
@@ -52,17 +62,7 @@ export default function OrdersPage() {
                 <span style={{ color: "#888" }}>{formatDate(order.createdAt)}</span>
               </div>
               <div style={{ marginBottom: "8px" }}>
-                상파:{" "}
-                <span
-                  style={{
-                    padding: "4px 8px",
-                    borderRadius: "4px",
-                    backgroundColor: order.status === "배송완료" ? "#e8f5e9" : "#fff3e0",
-                    color: order.status === "배송완료" ? "#2e7d32" : "#e65100",
-                  }}
-                >
-                  {order.status}
-                </span>
+                상태: <OrderStatusBadge order={order} onCancelled={handleCancelled} />
               </div>
               <ul style={{ margin: "8px 0", paddingLeft: "20px" }}>
                 {order.items.map((item) => (

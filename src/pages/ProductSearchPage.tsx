@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { searchProducts } from "../api/products";
+import ProductCard from "../components/ProductCard";
 import type { Product } from "../types";
 
 export default function ProductSearchPage() {
-  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -29,9 +28,6 @@ export default function ProductSearchPage() {
       setLoading(false);
     }
   };
-
-  const formatPrice = (price: number) =>
-    price.toLocaleString("ko-KR") + "원";
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
@@ -81,23 +77,7 @@ export default function ProductSearchPage() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "16px" }}>
         {results.map((product) => (
-          <div
-            key={product.id}
-            onClick={() => navigate(`/products/${product.id}`)}
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              padding: "16px",
-              cursor: "pointer",
-            }}
-          >
-            <h3 style={{ margin: "0 0 8px" }}>{product.name}</h3>
-            <p style={{ color: "#888", fontSize: "14px" }}>{product.category}</p>
-            <p style={{ fontWeight: "bold", color: "#2196F3" }}>{formatPrice(product.price)}</p>
-            <p style={{ fontSize: "12px", color: product.stock > 0 ? "#4CAF50" : "#f44336" }}>
-              {product.stock > 0 ? `재고 ${product.stock}개` : "품절"}
-            </p>
-          </div>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>

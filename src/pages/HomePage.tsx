@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getProducts } from "../api/products";
+import ProductCard from "../components/ProductCard";
+import SearchBar from "../components/SearchBar";
 import type { Product } from "../types";
 
 export default function HomePage() {
-  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,30 +22,17 @@ export default function HomePage() {
     load();
   }, []);
 
-  const formatPrice = (price: number) =>
-    price.toLocaleString("ko-KR") + "원";
-
   if (loading) return <p style={{ padding: "20px" }}>로딩 중...</p>;
 
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
-      <h1>쇼핑몰</h1>
+      <div style={{ marginBottom: "24px" }}>
+        <SearchBar />
+      </div>
+      <h2>신상품</h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "16px" }}>
         {products.map((product) => (
-          <div
-            key={product.id}
-            onClick={() => navigate(`/products/${product.id}`)}
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              padding: "16px",
-              cursor: "pointer",
-            }}
-          >
-            <h3>{product.name}</h3>
-            <p style={{ color: "#888" }}>{product.category}</p>
-            <p style={{ fontWeight: "bold" }}>{formatPrice(product.price)}</p>
-          </div>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>
