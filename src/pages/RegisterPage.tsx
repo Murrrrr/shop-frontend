@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
+import { signup } from "../api/auth";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,10 +15,11 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      await login(email, password);
-      navigate("/");
+      await signup(name, email, password);
+      alert("회원가입이 완료되었습니다!");
+      navigate("/login");
     } catch {
-      setError("이메일 또는 비밀번호가 올바르지 않습니다.");
+      setError("회원가입에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setLoading(false);
     }
@@ -25,8 +27,18 @@ export default function LoginPage() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "400px", margin: "0 auto" }}>
-      <h1>로그인</h1>
+      <h1>회원가입</h1>
       <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: "16px" }}>
+          <label>이름</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            style={{ width: "100%", padding: "8px", marginTop: "4px" }}
+          />
+        </div>
         <div style={{ marginBottom: "16px" }}>
           <label>이메일</label>
           <input
@@ -61,13 +73,9 @@ export default function LoginPage() {
             cursor: "pointer",
           }}
         >
-          {loading ? "로그인 중..." : "로그인"}
+          {loading ? "가입 중..." : "회원가입"}
         </button>
       </form>
-      <p style={{ marginTop: "16px", textAlign: "center" }}>
-        계정이 없으신가요?{" "}
-        <a href="/register" style={{ color: "#2196F3" }}>회원가입</a>
-      </p>
     </div>
   );
 }

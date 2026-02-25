@@ -4,38 +4,35 @@ import { getProduct } from "../api/products";
 import { addToCart } from "../api/cart";
 import type { Product } from "../types";
 
-// 상리 상셸 페이지
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
-  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (!id) return;
     const load = async () => {
       try {
-        const data = await getProduct(Number(id));
-        setProduct(data);
-      } catch (error) {
-        console.error("상품 정보를 빈러앤는데 실패했습니다:", error);
+        const response = await getProduct(id);
+        setProduct(response.data);
+      } catch {
+        alert("상품 정보를 불러오는데 실패했습니다.");
+        navigate("/");
       } finally {
         setLoading(false);
       }
     };
     load();
-  }, [id]);
+  }, [id, navigate]);
 
-  // 장바구니에 추가
   const handleAddToCart = async () => {
     if (!product) return;
     try {
       await addToCart(product.id, quantity);
       alert("장바구니에 추가되었습니다!");
-      navigate("/cart");
-    } catch (error) {
-      console.error("장바구니 추가에 실패했습니다:", error);
+    } catch {
       alert("장바구니 추가에 실패했습니다.");
     }
   };
@@ -44,64 +41,50 @@ export default function ProductDetailPage() {
     price.toLocaleString("ko-KR") + "원";
 
   if (loading) return <p style={{ padding: "20px" }}>로딩 중...</p>;
-  if (!product) return <p style={{ padding: "20px" }}>상품 찠을 수 없습니다.</p>;
+  if (!product) return null;
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: "16px" }}>
-        &larr; 뒤로가기
+      <button
+        onClick={() => navigate("/")}
+        style={{ marginBottom: "16px", background: "none", border: "none", cursor: "pointer", color: "#2196F3" }}
+      >
+        ← 상품 목록으로
       </button>
 
-      <div style={{ display: "flex", gap: "32px", flexWrap: "wrap" }}>
-        <img
-          src={product.imageUrl}
-          alt={product.name}
-          style={{ width: "400px", height: "400px", objectFit: "cover", borderRadius: "8px" }}
-        />
+      <h1>{product.name}</h1>
+      <p style={{ color: "#888", marginBottom: "8px" }}>{product.category}</p>
+      <p style={{ marginBottom: "16px" }}>{product.description}</p>
+      <p style={{ fontSize: "24px", fontWeight: "bold", color: "#2196F3" }}>{formatPrice(product.price)}</p>
+      <p style={{ color: product.stock > 0 ? "#4CAF50" : "#f44336", marginBottom: "24px" }}>
+        {product.stock > 0 ? `재고 ${product.stock}개` : "품절"}
+      </p>
 
-        <div style={{ flex: 1, minWidth: "250px" }}>
-          <p style={{ color: "#888" }}>{product.category}</p>
-          <h1 style={{ margin: "8px 0" }}>{product.name}</h1>
-          <p style={{ fontSize: "24px", fontWeight: "bold", margin: "16px 0" }}>
-            {formatPrice(product.price)}
-          </p>
-          <p style={{ lineHeight: 1.6, color: "#555" }}>{product.description}</p>
-
-          <div style={{ marginTop: "24px" }}>
-            <label>
-              수량:&nbsp;
-              <input
-                type="number"
-                min={1}
-                max={product.stock}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                style={{ width: "60px", padding: "4px" }}
-              />
-            </label>
-            <span style={{ marginLeft: "12px", color: "#888" }}>
-              재고: {product.stock}개
-            </span>
-          </div>
-
+      {product.stock > 0 && (
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <input
+            type="number"
+            min={1}
+            max={product.stock}
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+            style={{ width: "80px", padding: "8px" }}
+          />
           <button
             onClick={handleAddToCart}
-            disabled={product.stock === 0}
             style={{
-              marginTop: "20px",
               padding: "12px 32px",
-              fontSize: "16px",
-              backgroundColor: product.stock > 0 ? "#4CAF50" : "#ccc",
+              backgroundColor: "#4CAF50",
               color: "#fff",
               border: "none",
               borderRadius: "4px",
-              cursor: product.stock > 0 ? "pointer" : "not-allowed",
+              cursor: "pointer",
             }}
           >
-            {product.stock > 0 ? "장바구니에 담기" : "품죈"}
+            장바구니 담기
           </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }
