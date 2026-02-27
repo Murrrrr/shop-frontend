@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProduct } from "../api/products";
 import { addToCart } from "../api/cart";
+import LoadingSpinner from "../components/LoadingSpinner";
 import type { Product } from "../types";
 
 export default function ProductDetailPage() {
@@ -40,7 +41,7 @@ export default function ProductDetailPage() {
   const formatPrice = (price: number) =>
     price.toLocaleString("ko-KR") + "원";
 
-  if (loading) return <p style={{ padding: "20px" }}>로딩 중...</p>;
+  if (loading) return <LoadingSpinner message="상품 정보를 불러오는 중..." />;
   if (!product) return null;
 
   return (

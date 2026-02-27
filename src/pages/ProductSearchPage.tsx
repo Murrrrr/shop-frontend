@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { searchProducts } from "../api/products";
 import ProductCard from "../components/ProductCard";
+import LoadingSpinner from "../components/LoadingSpinner";
 import type { Product } from "../types";
 
 export default function ProductSearchPage() {
@@ -71,15 +72,19 @@ export default function ProductSearchPage() {
         </button>
       </form>
 
+      {loading && <LoadingSpinner message="검색 중..." />}
+
       {searched && results.length === 0 && !loading && (
         <p style={{ textAlign: "center", color: "#888" }}>검색 결과가 없습니다.</p>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "16px" }}>
-        {results.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {!loading && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "16px" }}>
+          {results.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

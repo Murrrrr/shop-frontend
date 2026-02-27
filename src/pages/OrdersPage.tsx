@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getOrders } from "../api/orders";
 import OrderStatusBadge from "../components/OrderStatusBadge";
+import LoadingSpinner from "../components/LoadingSpinner";
 import type { Order } from "../types";
 
 export default function OrdersPage() {
@@ -35,7 +36,7 @@ export default function OrdersPage() {
     );
   };
 
-  if (loading) return <p style={{ padding: "20px" }}>로딩 중...</p>;
+  if (loading) return <LoadingSpinner message="주문 내역을 불러오는 중..." />;
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>

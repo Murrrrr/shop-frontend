@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCart, removeFromCart, updateCartItem } from "../api/cart";
 import { createOrder } from "../api/orders";
+import LoadingSpinner from "../components/LoadingSpinner";
 import type { Cart } from "../types";
 
 // 장바구니 페이지
@@ -62,7 +63,7 @@ export default function CartPage() {
   const formatPrice = (price: number) =>
     price.toLocaleString("ko-KR") + "원";
 
-  if (loading) return <p style={{ padding: "20px" }}>로딩 중...</p>;
+  if (loading) return <LoadingSpinner message="장바구니를 불러오는 중..." />;
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
