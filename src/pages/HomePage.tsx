@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Pagination from "../components/Pagination";
 import ProductFilter from "../components/ProductFilter";
+import PromoBanner from "../components/PromoBanner";
 import type { Product } from "../types";
 
 export default function HomePage() {
@@ -56,6 +57,8 @@ export default function HomePage() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+      <PromoBanner />
+
       <div style={{ marginBottom: "24px" }}>
         <SearchBar />
       </div>
