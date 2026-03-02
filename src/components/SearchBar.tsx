@@ -63,7 +63,7 @@ export default function SearchBar({ onResults, placeholder = "상품 검색..." 
           whiteSpace: "nowrap",
         }}
       >
-        {searching ? "검색 중..." : "검색"}
+        {searching ? "검색 중..." : "🔍 검색"}
       </button>
     </form>
   );
