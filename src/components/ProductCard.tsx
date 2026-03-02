@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../api/cart";
+import WishlistButton from "./WishlistButton";
 import type { Product } from "../types";
 
 interface ProductCardProps {
@@ -40,7 +41,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         gap: "8px",
       }}
     >
-      <h3 style={{ margin: 0 }}>{product.name}</h3>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h3 style={{ margin: 0 }}>{product.name}</h3>
+        <WishlistButton productId={product.id} />
+      </div>
       <p style={{ color: "#888", margin: 0 }}>{product.category}</p>
       <p style={{ fontWeight: "bold", margin: 0, fontSize: "18px" }}>
         {formatPrice(product.price)}

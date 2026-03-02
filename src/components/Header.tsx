@@ -23,6 +23,7 @@ export default function Header() {
   const navItems = [
     { label: "홈", path: "/" },
     { label: "검색", path: "/search" },
+    { label: "인기상품", path: "/popular" },
     { label: "주문내역", path: "/orders" },
   ];
 

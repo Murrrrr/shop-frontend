@@ -18,3 +18,12 @@ export const deleteProduct = (id: string) =>
 
 export const searchProducts = (query: string, minPrice?: number, maxPrice?: number) =>
   client.get<Product[]>('/products', { params: { search: query, minPrice, maxPrice } });
+
+export const getPopularProducts = (limit: number = 10) =>
+  client.get<Product[]>('/products/popular', { params: { limit } });
+
+export const getProductReviews = (productId: string) =>
+  client.get(`/products/${productId}/reviews`);
+
+export const createProductReview = (productId: string, data: { rating: number; comment: string }) =>
+  client.post(`/products/${productId}/reviews`, data);
