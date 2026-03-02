@@ -8,6 +8,7 @@ export default function Footer() {
     { label: "검색", path: "/search" },
     { label: "장바구니", path: "/cart" },
     { label: "주문내역", path: "/orders" },
+    { label: "고객센터", path: "/support" },
   ];
 
   return (
@@ -34,6 +35,9 @@ export default function Footer() {
           <span style={{ fontWeight: "bold", fontSize: "16px" }}>ShopMall</span>
           <p style={{ color: "#888", fontSize: "13px", margin: "4px 0 0" }}>
             &copy; {new Date().getFullYear()} ShopMall. All rights reserved.
+          </p>
+          <p style={{ color: "#aaa", fontSize: "12px", margin: "2px 0 0" }}>
+            고객센터: 1588-0000 | 평일 09:00 - 18:00
           </p>
         </div>
 
